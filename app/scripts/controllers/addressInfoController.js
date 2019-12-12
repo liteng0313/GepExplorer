@@ -4,8 +4,8 @@ angular.module('ethExplorer')
       var web3 = $rootScope.web3;
 	
       $scope.init=function(){
-
-        $scope.addressId=$routeParams.addressId;
+          $scope.gepaddr = $routeParams.addressId
+          $scope.addressId = gep2eth($routeParams.addressId);
 
         if($scope.addressId!==undefined) {
           getAddressInfos().then(function(result){

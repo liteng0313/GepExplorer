@@ -13,5 +13,20 @@
     "html5-boilerplate": "~5.2.0",
     "web3": "~0.14.0",
     "angular-bootstrap": "~0.13.3"
+  },
+  "authors": [
+    "liteng <liteng@elastos.org>"
+  ],
+  "main": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "app/bower_components",
+    "test",
+    "tests"
+  ],
+  "devDependencies": {
+    "angular": "^1.7.9"
   }
 }

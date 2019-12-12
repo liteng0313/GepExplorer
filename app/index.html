@@ -6,80 +6,139 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Ethereum Block Explorer</title>
+  <title>GEP Block Explorer</title>
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="styles/main.css">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-  <script src="bower_components/web3/dist/web3.min.js"></script>
+  <script src="bower_components/web3/dist/web3.js"></script>
 
 </head>
 <body>
-  
+
 <nav class="navbar navbar-inverse navbar-fixed-top">
     <div class="container">
         <div class="navbar-header">
-            <span class="icon-bar"></span><a href="/#/" class="navbar-brand">Ether Block Explorer</a>
+            <span class="icon-bar"></span><a href="/#/" class="navbar-brand">GEP Block Explorer</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
-            <form  name="search_form" ng-controller="mainCtrl" ng-submit="processRequest()"  class="navbar-form navbar-right">
-            <div class="form-group">
-            <input type="text" placeholder="Tx Hash, Address or Block number" name="requestType" required  ng-model="ethRequest"  class="form-control"><br>
-            </div>
-            <button type="submit" class="btn btn-success">Search</button></form>
+                <form  name="search_form" ng-controller="mainCtrl" ng-submit="processRequest()"  class="navbar-form navbar-right">
+                    <div class="form-group">
+                        <input type="text" placeholder="Tx Hash, Address or Block number" name="requestType" required  ng-model="ethRequest"  class="form-control"><br>
+                    </div>
+                    <button type="submit" class="btn btn-success">Search</button></form>
             </ul>
-	    </div>
+        </div>
     </div>
 </nav>
 
 
 
-  <div ng-view></div>
+<div ng-view></div>
 
 <!--Libs-->
 
-  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.min.js"></script>
-  <script src="bower_components/angular-bootstrap/ui-bootstrap.min.js"></script>
-  <script src="bower_components/angular-route/angular-route.js"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<!--<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.min.js"></script>-->
+<!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>-->
+
+<script src="angular.min.js"></script>
+<script src="bower_components/angular-bootstrap/ui-bootstrap.min.js"></script>
+<script src="bower_components/angular-route/angular-route.js"></script>
+<script src="jquery.min.js"></script>
+<script src="node_modules/base-58/Base58.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 <!--Core-->
-  <script src="app.js"></script>
+<script src="app.js"></script>
 
 <!--Controllers-->
-  <script src="scripts/controllers/mainController.js"></script>
-  <script src="scripts/controllers/addressInfoController.js"></script>
-  <script src="scripts/controllers/blockInfosController.js"></script>
-  <script src="scripts/controllers/transactionInfosController.js"></script>
+<script src="scripts/controllers/mainController.js"></script>
+<script src="scripts/controllers/addressInfoController.js"></script>
+<script src="scripts/controllers/blockInfosController.js"></script>
+<script src="scripts/controllers/transactionInfosController.js"></script>
 
-  <!--Services-->
-    <div id="connectwarning" class="modal fade" role="dialog">
-        <div class="modal-dialog">
+<!--Services-->
+<div id="connectwarning" class="modal fade" role="dialog">
+    <div class="modal-dialog">
 
-            <!-- Modal content-->
-            <div class="modal-content">
-                <center><div class="modal-header">
-                    <h4 class="modal-title">Allow Access to Geth and Refresh the Page</h4>
-                </div>
+        <!-- Modal content-->
+        <div class="modal-content">
+            <center><div class="modal-header">
+                <h4 class="modal-title">Allow Access to Geth and Refresh the Page</h4>
+            </div>
                 <div class="modal-body">
                     <code><p id="modaltext"></p></code>
                 </div></center>
-            </div>
         </div>
     </div>
-
-
-<div class="footer" style="bottom: 0px;text-align: center;background-color: white; width:100%;">
-    <footer>
-        <hr>
-        <p>
-            © Etherparty.io 2017 | <a href="http://github.com/etherparty/explorer">Fork me on GitHub</a>
-        </p>
-    </footer>
 </div>
+
+
+<!--<div class="footer" style="bottom: 0px;text-align: center;background-color: white; width:100%;">-->
+<!--    <footer>-->
+<!--        <hr>-->
+<!--        <p>-->
+<!--            © Etherparty.io 2017 | <a href="http://github.com/etherparty/explorer">Fork me on GitHub</a>-->
+<!--        </p>-->
+<!--    </footer>-->
+<!--</div>-->
 <script>
-$("#modaltext").text( 'geth --rpc --rpccorsdomain "'+ window.location.protocol + '//' + window.location.host + '"' );
+    $("#modaltext").text( 'geth --rpc --rpccorsdomain "'+ window.location.protocol + '//' + window.location.host + '"' );
+</script>
+
+<script>
+    function str2hexbytes(str)
+    {
+        let pos = 0;
+        let len = str.length;
+        if(len %2 != 0)
+        {
+            return null;
+        }
+        len /= 2;
+        let hexA = new Array();
+        for(var i=0; i<len; i++)
+        {
+            var s = str.substr(pos, 2);
+            var v = parseInt(s, 16);
+            hexA.push(v);
+            pos += 2;
+        }
+        return hexA;
+    }
+
+    var eth2gep = function(str) {
+        let temp = str
+        temp = temp.substring(2)
+        console.log("temp: ", temp)
+        let buf = str2hexbytes(temp)
+        console.log("buf: ", buf)
+        let  base58Str = "GEP" + Base58.encode(buf)
+        return base58Str
+    }
+
+    function hexbytes2str(arr) {
+        var str = "";
+        for(var i=0; i<arr.length; i++) {
+            var tmp = arr[i].toString(16);
+            if(tmp.length == 1){
+                tmp = "0" + tmp;
+            }
+            str += tmp;
+        }
+        return str;
+    }
+
+    var gep2eth = function(str){
+        let temp = str
+        temp = temp.substring(3)
+        let decode = Base58.decode(temp)
+        let ret = hexbytes2str(decode)
+        return "0x" + ret
+    }
+
+
+
 </script>
 </body>
 </html>

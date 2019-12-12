@@ -22,8 +22,11 @@ angular.module('ethExplorer')
                     else{
                         $scope.hash ='pending';
                     }
+
                     if(result.miner!==undefined){
-                        $scope.miner = result.miner;
+                        $scope.miner = eth2gep(result.miner)
+                        console.log("address1: ", result.miner)
+                        console.log("address2: ", gep2eth($scope.miner))
                     }
                     else{
                         $scope.miner ='pending';
@@ -52,7 +55,7 @@ angular.module('ethExplorer')
                         if(info!==undefined){
                             var newDate = new Date();
                             newDate.setTime(info.timestamp*1000);
-                            $scope.time = newDate.toUTCString();
+                            $scope.time = newDate.toLocaleString();
                         }
                     }
 
@@ -95,10 +98,13 @@ angular.module('ethExplorer')
                 id: result.hash,
                 hash: result.hash,
                 from: result.from,
+                  fromgep: eth2gep(result.from),
+                  togep: eth2gep(result.to),
                 to: result.to,
                 gas: result.gas,
                 input: result.input,
-                value: result.value
+                value: result.value,
+                nonce: result.nonce,
               }
               $scope.$apply(
                 $scope.transactions.push(transaction)

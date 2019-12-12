@@ -28,16 +28,24 @@ angular.module('ethExplorer')
                     else{
                         $scope.blockNumber ='pending';
                     }
+
+                    var info = web3.eth.getBlock($scope.blockNumber);
+
                     $scope.from = result.from;
+                    $scope.fromgep = eth2gep(result.from)
                     $scope.gas = result.gas;
-                    $scope.gasPrice = result.gasPrice.c[0] + " WEI";
+                    $scope.gasPrice = result.gasPrice.c[0] + " GEPs";
                     $scope.hash = result.hash;
                     $scope.input = result.input; // that's a string
                     $scope.nonce = result.nonce;
                     $scope.to = result.to;
+                    $scope.togep = eth2gep(result.to)
                     $scope.transactionIndex = result.transactionIndex;
-                    $scope.ethValue = result.value.c[0] / 10000; 
-                    $scope.txprice = (result.gas * result.gasPrice)/1000000000000000000 + " ETH";
+                    $scope.ethValue = result.value / 1000000000000000000;
+                    $scope.txprice = (result.gas * result.gasPrice)/1000000000000000000 + " GEP";
+                    var newData = new Date();
+                    $scope.date = newData.toLocaleString()
+                    newData.setTime(1000 * info.timestamp)
                     if($scope.blockNumber!==undefined){
                         $scope.conf = number - $scope.blockNumber;
                         if($scope.conf===0){
@@ -46,7 +54,6 @@ angular.module('ethExplorer')
                     }
                         //TODO Refactor this logic, asynchron calls + services....
                     if($scope.blockNumber!==undefined){
-                        var info = web3.eth.getBlock($scope.blockNumber);
                         if(info!==undefined){
                             $scope.time = info.timestamp;
                         }
@@ -55,13 +62,9 @@ angular.module('ethExplorer')
                 });
 
             }
-
-
-
             else{
                 $location.path("/"); // add a trigger to display an error message so user knows he messed up with the TX number
             }
-
 
             function getTransactionInfos(){
                 var deferred = $q.defer();
@@ -77,9 +80,6 @@ angular.module('ethExplorer')
                 return deferred.promise;
 
             }
-
-
-
         };
         $scope.init();
         console.log($scope.result);
